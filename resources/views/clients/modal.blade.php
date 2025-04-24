@@ -31,12 +31,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="client_prefix" class="form-label">client_prefix</label>
-                        <input type="text" class="form-control" id="client_prefix" name="client_prefix">
+                        <input type="text" class="form-control" id="client_prefix" name="client_prefix"
+                            max="4" min="4">
                     </div>
                     <div class="mb-3">
                         <label for="client_logo" class="form-label">client_logo (Max 2MB)</label>
                         <input type="file" class="form-control" id="client_logo" name="client_logo"
                             accept="image/jpeg,image/png,image/jpg,image/webp">
+                        <img class="mt-2 img-thumbnail" id="logo-preview" src="" alt="no-logo"
+                            style="max-height: 100px;">
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">address</label>

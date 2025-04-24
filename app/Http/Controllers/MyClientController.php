@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ClientRequest;
-use App\Models\MyClient;
 use Exception;
 use GuzzleHttp\Client;
+use App\Models\MyClient;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Requests\ClientRequest;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Str;
+use App\Http\Requests\UpdateClientRequest;
 
 class MyClientController extends Controller
 {
@@ -39,15 +40,9 @@ class MyClientController extends Controller
 
             $data['slug'] = Str::slug($data['name']);
 
-            if ($request->hasFile('client_logo')) {
-                $logo = $request->file('client_logo');
-                $logo->store('images', 'public');
-                $data['client_logo'] = $logo->hashName();
-
-                if (!empty($oldImg)) {
-                    Storage::disk('public')->delete('images/' . $oldImg);
-                }
-            }
+            $logo = $request->file('client_logo');
+            $logo->store('images', 'public');
+            $data['client_logo'] = $logo->hashName();
 
             $client = MyClient::create($data);
 
@@ -55,6 +50,7 @@ class MyClientController extends Controller
                 'title' => 'Success',
                 'text' => 'Client created successfully',
                 'icon' => 'success',
+                'data' => $client,
             ]);
         } catch (Exception $error) {
             return response()->json([
@@ -80,17 +76,6 @@ class MyClientController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
         }
-        return response()->json([
-            'id' => $client->id,
-            'name' => $client->name,
-            'is_project' => $client->is_project,
-            'self_capture' => $client->self_capture,
-            'client_prefix' => $client->client_prefix,
-            'client_logo' => $client->client_logo,
-            'address' => $client->address,
-            'phone_number' => $client->phone_number,
-            'city' => $client->city,
-        ]);
     }
 
     /**
@@ -104,9 +89,39 @@ class MyClientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateClientRequest $request, string $id, ?string $oldImg = null)
     {
         //
+        try {
+            $data = $request->validated();
+            $data['slug'] = Str::slug($data['name']);
+
+            $client = MyClient::findOrFail($id);
+
+            if ($request->hasFile('client_logo')) {
+                $logo = $request->file('client_logo');
+                $logo->store('images', 'public');
+                $data['client_logo'] = $logo->hashName();
+
+                if (!empty($oldImg)) {
+                    Storage::disk('public')->delete('images/' . $oldImg);
+                }
+            }
+
+            $client->update($data);
+
+            return response()->json([
+                'title' => 'Success',
+                'text' => 'client updated successfully',
+                'icon' => 'success'
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+                'title' => 'Error',
+                'text' => $error->getMessage(),
+                'icon' => 'error'
+            ]);
+        }
     }
 
     /**
@@ -125,7 +140,7 @@ class MyClientController extends Controller
 
         return response()->json([
             'title' => 'Success',
-            'text' => 'Product deleted successfully',
+            'text' => 'Client deleted successfully',
             'icon' => 'success'
         ]);
     }

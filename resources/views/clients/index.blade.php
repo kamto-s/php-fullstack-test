@@ -207,7 +207,7 @@
                     $('#is_project').val(result.is_project)
                     $('#self_capture').val(result.self_capture)
                     $('#client_prefix').val(result.client_prefix)
-                    $('#client_logo').val(result.client_logo)
+                    $('#logo-preview').attr('src', 'storage/images/' + result.client_logo)
                     $('#address').val(result.address)
                     $('#phone_number').val(result.phone_number)
                     $('#city').val(result.city)
@@ -221,7 +221,7 @@
             resetValidation();
             $('#clientModal').modal('show');
 
-            $('.modal-title').text('Update Product');
+            $('.modal-title').text('Update Client');
             $('.btnSubmit').text('Update');
         }
 
