@@ -91,7 +91,7 @@ class MyClientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ClientRequest $request, string $id, ?string $oldImg = null)
+    public function update(ClientRequest $request, string $id)
     {
         try {
             $data = $request->validated();
@@ -104,8 +104,8 @@ class MyClientController extends Controller
                 $logo->store('images', 'public');
                 $data['client_logo'] = $logo->hashName();
 
-                if (!empty($oldImg) && $oldImg != 'no-image.jpg') {
-                    Storage::disk('public')->delete('images/' . $oldImg);
+                if (!empty($client->client_logo) && $client->client_logo != 'no-image.jpg') {
+                    Storage::disk('public')->delete('images/' . $client->client_logo);
                 }
             } else {
                 $data['client_logo'] = 'no-image.jpg';
