@@ -40,17 +40,19 @@ class MyClientController extends Controller
 
             $data['slug'] = Str::slug($data['name']);
 
-            $logo = $request->file('client_logo');
-            $logo->store('images', 'public');
-            $data['client_logo'] = $logo->hashName();
-
+            if ($request->hasFile('client_logo')) {
+                $logo = $request->file('client_logo');
+                $logo->store('images', 'public');
+                $data['client_logo'] = $logo->hashName();
+            } else {
+                $data['client_logo'] = 'no-image.jpg';
+            }
             $client = MyClient::create($data);
 
             return response()->json([
                 'title' => 'Success',
                 'text' => 'Client created successfully',
                 'icon' => 'success',
-                'data' => $client,
             ]);
         } catch (Exception $error) {
             return response()->json([
@@ -89,31 +91,32 @@ class MyClientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateClientRequest $request, string $id, ?string $oldImg = null)
+    public function update(ClientRequest $request, string $id, ?string $oldImg = null)
     {
-        //
         try {
             $data = $request->validated();
-            $data['slug'] = Str::slug($data['name']);
 
-            $client = MyClient::findOrFail($id);
+            $data['slug'] = Str::slug($data['name']);
+            $client = MyClient::where('id', $id)->firstOrFail();
 
             if ($request->hasFile('client_logo')) {
                 $logo = $request->file('client_logo');
                 $logo->store('images', 'public');
                 $data['client_logo'] = $logo->hashName();
 
-                if (!empty($oldImg)) {
+                if (!empty($oldImg) && $oldImg != 'no-image.jpg') {
                     Storage::disk('public')->delete('images/' . $oldImg);
                 }
+            } else {
+                $data['client_logo'] = 'no-image.jpg';
             }
 
             $client->update($data);
 
             return response()->json([
                 'title' => 'Success',
-                'text' => 'client updated successfully',
-                'icon' => 'success'
+                'text' => 'Client Updated successfully',
+                'icon' => 'success',
             ]);
         } catch (Exception $error) {
             return response()->json([

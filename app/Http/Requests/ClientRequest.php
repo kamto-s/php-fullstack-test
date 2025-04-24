@@ -26,7 +26,7 @@ class ClientRequest extends FormRequest
             'is_project' => 'required|boolean',
             'self_capture' => 'required|boolean',
             'client_prefix' => 'required|min:4|max:4',
-            'client_logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'client_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'address' => 'required|min:3|max:255',
             'phone_number' => 'required|min:3|max:255',
             'city' => 'required|min:3|max:255',

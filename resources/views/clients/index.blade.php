@@ -142,7 +142,7 @@
             $('.btnSubmit').text('Create');
         }
 
-        // FORM - store/ update
+        // form store || update
         $('#clientForm').on('submit', function(e) {
             e.preventDefault();
 
@@ -182,6 +182,13 @@
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR.responseText);
                     // alert("Error: " + jqXHR.responseText);
+                    Swal.fire({
+                        title: response.title,
+                        text: response.text,
+                        icon: response.icon,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }
             });
         });
@@ -201,16 +208,16 @@
                 success: function(response) {
                     let result = response.data;
 
-                    console.log(result);
-
                     $('#name').val(result.name)
                     $('#is_project').val(result.is_project)
                     $('#self_capture').val(result.self_capture)
                     $('#client_prefix').val(result.client_prefix)
                     $('#logo-preview').attr('src', 'storage/images/' + result.client_logo)
+                        .attr('alt', result.client_logo);
                     $('#address').val(result.address)
                     $('#phone_number').val(result.phone_number)
                     $('#city').val(result.city)
+                    $('#id').val(result.id)
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR.responseText);

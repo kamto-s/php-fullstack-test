@@ -38,7 +38,7 @@
                         <label for="client_logo" class="form-label">client_logo (Max 2MB)</label>
                         <input type="file" class="form-control" id="client_logo" name="client_logo"
                             accept="image/jpeg,image/png,image/jpg,image/webp">
-                        <img class="mt-2 img-thumbnail" id="logo-preview" src="" alt="no-logo"
+                        <img class="mt-2 img-thumbnail" id="logo-preview" src="" alt=""
                             style="max-height: 100px;">
                     </div>
                     <div class="mb-3">
